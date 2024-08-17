@@ -6,7 +6,7 @@ namespace MSMQ.Bus
         {
             var builder = Host.CreateApplicationBuilder(args);
             builder.Services.AddHostedService<Worker>();
-            builder.Services.AddTelemetry(builder.Configuration);
+            builder.Services.AddSerilogSeq(builder.Configuration);
 
             var host = builder.Build();
             host.Run();
