@@ -3,11 +3,11 @@ using System.Diagnostics;
 
 namespace MSMQ.Bus
 {
-    public class Worker : BackgroundService
+    public class BusWorker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<BusWorker> _logger;
 
-        public Worker(ILogger<Worker> logger)
+        public BusWorker(ILogger<BusWorker> logger)
         {
             _logger = logger;
         }
