@@ -1,4 +1,5 @@
 ﻿using MSMQ.Kafka.Actions;
+using MSMQ.Kafka.Events;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,12 @@ namespace MSMQ.Kafka.Handlers.Actions
         {
         }
 
-        protected override Task Handle(RemoveMovieAction payload, CancellationToken cancellationToken = default)
+        protected override async Task Handle(Guid sourceId, RemoveMovieAction payload, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var @event = new MovieRemovedEvent() { MovieId = payload.MovieId, SourceId = sourceId };
+            await _producer.Publish(@event, cancellationToken);
+
+            _logger.LogInformation("Movie #'{MovieId}' was removed to database by handler.", payload.MovieId);
         }
     }
 }

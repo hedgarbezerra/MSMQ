@@ -22,7 +22,7 @@ namespace MSMQ.Kafka.Factories
         {
             var config = new ProducerConfig()
             {
-                BootstrapServers = "localhost:9092",
+                BootstrapServers = _configuration.GetValue<string>("Kafka:BootstrapServers"),
                 MessageMaxBytes = MAX_ACCEPTED_BYTES,
                 MessageTimeoutMs = 100_000
             };

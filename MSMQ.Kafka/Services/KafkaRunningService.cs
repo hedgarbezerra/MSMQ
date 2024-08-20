@@ -88,7 +88,7 @@ namespace MSMQ.Kafka.Services
             }
             catch(ConsumerNotImplementedException e)
             {
-                _logger.LogError("Message #{MessageId} for topic '{MessageTopic}' does not have consumer handler implemented or was not identified.", e.Message, e.Topic);
+                _logger.LogError("Message #{MessageId} for topic '{MessageTopic}' does not have consumer handler implemented or was not identified.", e.MessageId, e.Topic);
             }
         }
     }

@@ -97,7 +97,7 @@ namespace MSMQ.API.Controllers
         {
             try
             {
-                var @event = new MovieAddedEvent { MovieId = Guid.NewGuid() };
+                var @event = new MovieAddedEvent { MovieId = Guid.NewGuid(), SourceId = Guid.NewGuid() };
                 await _producer.Publish(@event, cancellationToken);
 
                 return Ok();
@@ -114,7 +114,7 @@ namespace MSMQ.API.Controllers
         {
             try
             {
-                var @event = new MovieUpdatedEvent() { Movie = new Movie() };
+                var @event = new MovieUpdatedEvent() { Movie = new Movie() { Name = "Movie top"}, SourceId = Guid.NewGuid() };
                 await _producer.Publish(@event, cancellationToken);
 
                 return Ok();
@@ -131,7 +131,7 @@ namespace MSMQ.API.Controllers
         {
             try
             {
-                var @event = new MovieRemovedEvent() { MovieId = Guid.NewGuid() };
+                var @event = new MovieRemovedEvent() { MovieId = Guid.NewGuid(), SourceId = Guid.NewGuid() };
                 await _producer.Publish(@event, cancellationToken);
 
                 return Ok();
@@ -148,7 +148,7 @@ namespace MSMQ.API.Controllers
         {
             try
             {
-                var @event = new MovieRetrievedEvent { Movie = new Movie() };
+                var @event = new MovieRetrievedEvent { Movie = new Movie() { Name = "Movie top" }, SourceId = Guid.NewGuid() };
                 await _producer.Publish(@event, cancellationToken);
 
                 return Ok();

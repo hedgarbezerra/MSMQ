@@ -37,10 +37,9 @@ namespace MSMQ.Kafka.Factories
             string topic = _kafkaTopicGenerator.GetTopic(message);
 
             if(!_topicServices.TryGetValue(topic, out List<IKafkaConsumerHandler> consumerHandlers))
-                throw new ConsumerNotImplementedException(topic);
+                throw new ConsumerNotImplementedException(message.Id, topic);
 
             return consumerHandlers;
         }
-        //TODO: Criar método que retorne tópicos(string) registrados
     }
 }

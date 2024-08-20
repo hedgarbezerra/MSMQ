@@ -1,4 +1,5 @@
 ﻿using MSMQ.Kafka.Actions;
+using MSMQ.Kafka.Events;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,12 @@ namespace MSMQ.Kafka.Handlers.Actions
         {
         }
 
-        protected override Task Handle(AddMovieAction payload, CancellationToken cancellationToken = default)
+        protected override async Task Handle(Guid sourceId, AddMovieAction payload, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var @event = new MovieAddedEvent() { MovieId = payload.Movie.Id, SourceId = sourceId };
+            await _producer.Publish(@event, cancellationToken);
+
+            _logger.LogInformation("Movie '{MovieName}' added to database by handler.", payload.Movie.Name);
         }
     }
     public class AddMovieActionHandler2 : KafkaConsumerHandler<AddMovieAction>
@@ -27,9 +31,12 @@ namespace MSMQ.Kafka.Handlers.Actions
         {
         }
 
-        protected override Task Handle(AddMovieAction payload, CancellationToken cancellationToken = default)
+        protected override async Task Handle(Guid sourceId, AddMovieAction payload, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var @event = new MovieAddedEvent() { MovieId = payload.Movie.Id, SourceId = sourceId };
+            await _producer.Publish(@event, cancellationToken);
+
+            _logger.LogInformation("Movie '{MovieName}' added to database by handler 2.", payload.Movie.Name);
         }
     }
 }

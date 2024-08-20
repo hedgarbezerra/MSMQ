@@ -34,10 +34,12 @@ namespace MSMQ.Kafka.Handlers
             ArgumentNullException.ThrowIfNull(message);
             try
             {
-                _logger.LogInformation("Started consuming message #{MessageId} from topic '{MessageTopic}'", message.Id, Topic);
+                _logger.LogInformation("Started consuming message #{MessageId} from topic '{MessageTopic}' by handler '{ConsumerHandler}'", message.Id, Topic, this.GetType().Name);
                 var payload = (T)message.Payload;
 
-                await Handle(payload, cancellationToken);
+                await Handle(message.Id, payload, cancellationToken);
+
+                _logger.LogInformation("Message #{MessageId} has been consumed by handler '{ConsumerHandler}'", message.Id, this.GetType().Name);
             }
             catch(Exception ex)
             {
@@ -45,7 +47,7 @@ namespace MSMQ.Kafka.Handlers
             }
         }
 
-        protected abstract Task Handle(T payload, CancellationToken cancellationToken = default);
+        protected abstract Task Handle(Guid sourceId, T payload, CancellationToken cancellationToken = default);
 
         protected KafkaMessage<TResult> PackMessage<TResult>(TResult result) => KafkaMessage<TResult>.Create(result);
     }

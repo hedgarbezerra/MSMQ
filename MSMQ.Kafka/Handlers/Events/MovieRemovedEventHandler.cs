@@ -15,9 +15,9 @@ namespace MSMQ.Kafka.Handlers.Events
         {
         }
 
-        protected override Task Handle(MovieRemovedEvent payload, CancellationToken cancellationToken = default)
+        protected override async Task Handle(Guid sourceId, MovieRemovedEvent payload, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Movie #{MovieId} removed by handler and event was handled here.", payload.MovieId);
         }
     }
 }

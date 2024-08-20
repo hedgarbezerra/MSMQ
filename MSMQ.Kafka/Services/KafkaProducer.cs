@@ -25,8 +25,10 @@ namespace MSMQ.Kafka.Services
 
         public async Task Publish<T>(string topic, T payload, CancellationToken token)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(topic, nameof(topic));
+            ArgumentException.ThrowIfNullOrWhiteSpace(topic);
+            ArgumentNullException.ThrowIfNull(payload);
 
+            _logger.LogInformation("Starting message delivery to '{TopicName}' topic.", topic);
             try
             {
                 var innerMessage = KafkaMessage<T>.Create(payload);
@@ -50,10 +52,14 @@ namespace MSMQ.Kafka.Services
 
         public async Task Publish<T>(T payload, CancellationToken token)
         {
+            ArgumentNullException.ThrowIfNull(payload);
+
             try
             {
+                var topic = _kafkaTopicGenerator.GetTopic(payload.GetType());
+                _logger.LogInformation("Starting message delivery to '{TopicName}' topic.", topic);
+
                 var innerMessage = KafkaMessage<T>.Create(payload);
-                var topic = _kafkaTopicGenerator.GetTopic(innerMessage);
                 var message = new Message<Null, KafkaMessage>
                 {
                     Value = innerMessage,

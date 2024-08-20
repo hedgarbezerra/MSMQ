@@ -1,4 +1,5 @@
-﻿using MSMQ.Kafka.Events;
+﻿using MSMQ.Common.Entities;
+using MSMQ.Kafka.Events;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace MSMQ.Kafka.Handlers.Events
         {
         }
 
-        protected override Task Handle(MovieAddedEvent payload, CancellationToken cancellationToken = default)
+        protected override async Task Handle(Guid sourceId, MovieAddedEvent payload, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Movie #{MovieId} added by handler and event was handled here.", payload.MovieId);
         }
     }
 }

@@ -8,11 +8,13 @@ namespace MSMQ.Kafka.Exceptions
 {
     public class ConsumerNotImplementedException : Exception
     {
-        public ConsumerNotImplementedException(string topic) : base("The selected topic does not have a handler implemented.")
+        public string Topic { get; init; }
+        public Guid MessageId { get; init; }
+        public ConsumerNotImplementedException(Guid messageId, string topic) : base("The selected topic does not have a handler implemented.")
         {
+            MessageId = messageId;
             Topic = topic;
         }
 
-        public string Topic { get; init; }
     }
 }
