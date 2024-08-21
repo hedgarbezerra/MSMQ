@@ -1,12 +1,12 @@
 ﻿using Confluent.Kafka;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 using MSMQ.Kafka.Services;
 
 namespace MSMQ.Kafka.Factories
 {
     public interface IKafkaProducerFactory
     {
-        public IProducer<Null, KafkaMessage> Create();
+        public IProducer<Null, CommonMessage> Create();
     }
     public class KafkaProducerFactory : IKafkaProducerFactory
     {
@@ -18,7 +18,7 @@ namespace MSMQ.Kafka.Factories
             _configuration = configuration;
         }
 
-        public IProducer<Null, KafkaMessage> Create()
+        public IProducer<Null, CommonMessage> Create()
         {
             var config = new ProducerConfig()
             {
@@ -27,7 +27,7 @@ namespace MSMQ.Kafka.Factories
                 MessageTimeoutMs = 100_000
             };
 
-            var builder = new ProducerBuilder<Null, KafkaMessage>(config)
+            var builder = new ProducerBuilder<Null, CommonMessage>(config)
                 .SetValueSerializer(new KafkaMessageSerializer());
 
             return builder.Build();

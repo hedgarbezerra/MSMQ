@@ -1,12 +1,12 @@
 ﻿using Confluent.Kafka;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 using MSMQ.Kafka.Services;
 
 namespace MSMQ.Kafka.Factories
 {
     public interface IKafkaConsumerFactory
     {
-        public IConsumer<Null, KafkaMessage> Create();
+        public IConsumer<Null, CommonMessage> Create();
     }
     public class KafkaConsumerFactory : IKafkaConsumerFactory
     {
@@ -18,7 +18,7 @@ namespace MSMQ.Kafka.Factories
             _configuration = configuration;
         }
 
-        public IConsumer<Null, KafkaMessage> Create()
+        public IConsumer<Null, CommonMessage> Create()
         {
             var config = new ConsumerConfig()
             {
@@ -30,7 +30,7 @@ namespace MSMQ.Kafka.Factories
                 MaxPartitionFetchBytes = MAX_ACCEPTED_BYTES,
             };
 
-            var builder = new ConsumerBuilder<Null, KafkaMessage>(config)
+            var builder = new ConsumerBuilder<Null, CommonMessage>(config)
                 .SetValueDeserializer(new KafkaMessageSerializer());
 
             return builder.Build();

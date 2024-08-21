@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 using MSMQ.Kafka.Factories;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 
 namespace MSMQ.Kafka.Services
 {
@@ -31,8 +31,8 @@ namespace MSMQ.Kafka.Services
             _logger.LogInformation("Starting message delivery to '{TopicName}' topic.", topic);
             try
             {
-                var innerMessage = KafkaMessage<T>.Create(payload);
-                var message = new Message<Null, KafkaMessage>
+                var innerMessage = CommonMessage<T>.Create(payload);
+                var message = new Message<Null, CommonMessage>
                 {
                     Value = innerMessage,
                 };
@@ -42,7 +42,7 @@ namespace MSMQ.Kafka.Services
 
                 _logger.LogInformation("Message #{MessageId} delivered to '{DeliveryPartition}' successfully.", innerMessage.Id, result.TopicPartition);
             }
-            catch (ProduceException<Null, KafkaMessage> e)
+            catch (ProduceException<Null, CommonMessage> e)
             {
                 _logger.LogError("Message was not deliveried to '{DeliveryPartition}' due to '{ErrorReason}'.", e.DeliveryResult.TopicPartition, e.DeliveryResult.Message);
                 throw;
@@ -59,8 +59,8 @@ namespace MSMQ.Kafka.Services
                 var topic = _kafkaTopicGenerator.GetTopic(payload.GetType());
                 _logger.LogInformation("Starting message delivery to '{TopicName}' topic.", topic);
 
-                var innerMessage = KafkaMessage<T>.Create(payload);
-                var message = new Message<Null, KafkaMessage>
+                var innerMessage = CommonMessage<T>.Create(payload);
+                var message = new Message<Null, CommonMessage>
                 {
                     Value = innerMessage,
                 };
@@ -69,7 +69,7 @@ namespace MSMQ.Kafka.Services
 
                 _logger.LogInformation("Message #{MessageId} delivered to '{DeliveryPartition}' successfully.", innerMessage.Id, result.TopicPartition);
             }
-            catch (ProduceException<Null, KafkaMessage> e)
+            catch (ProduceException<Null, CommonMessage> e)
             {
                 _logger.LogError("Message was not deliveried to '{DeliveryPartition}' due to '{ErrorReason}'.", e.DeliveryResult.TopicPartition, e.DeliveryResult.Message);
                 throw;

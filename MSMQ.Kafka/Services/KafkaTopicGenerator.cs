@@ -1,13 +1,13 @@
 ﻿using Confluent.Kafka.Admin;
 using MSMQ.Kafka.Handlers;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 
 namespace MSMQ.Kafka.Services
 {
     public interface IKafkaTopicGenerator
     {
         public string GetTopic(Type payloadType);
-        string GetTopic(KafkaMessage message);
+        string GetTopic(CommonMessage message);
         List<TopicSpecification> GetTopics();
     }
 
@@ -36,7 +36,7 @@ namespace MSMQ.Kafka.Services
             return topics;
         }
 
-        public string GetTopic(KafkaMessage message)
+        public string GetTopic(CommonMessage message)
         {
             var payloadType = message.GetPayloadType();
 

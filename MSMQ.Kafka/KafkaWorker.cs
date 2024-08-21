@@ -1,13 +1,4 @@
-﻿using Confluent.Kafka;
-using MSMQ.Kafka.Factories;
-using MSMQ.Kafka.Handlers;
-using MSMQ.Kafka.Messages;
-using MSMQ.Kafka.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MSMQ.Kafka.Services;
 
 namespace MSMQ.Kafka
 {

@@ -1,31 +1,21 @@
 ﻿using Confluent.Kafka;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
+using MSMQ.Common.Serializers;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace MSMQ.Kafka.Services
 {
-    public class KafkaMessageSerializer : ISerializer<KafkaMessage>, IDeserializer<KafkaMessage>
+    public class KafkaMessageSerializer : ISerializer<CommonMessage>, IDeserializer<CommonMessage>
     {
-        public KafkaMessage Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+        public CommonMessage Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
         {
-            string json = Encoding.UTF8.GetString(data);
-            var tempMessage = JsonConvert.DeserializeObject<KafkaMessage>(json);
-            if (tempMessage is null)
-                throw new InvalidOperationException($"Unable to deserialize message to {nameof(KafkaMessage)}");
-
-            string payloadJson = tempMessage?.Payload?.ToString() ?? throw new InvalidCastException("Unable to convert message payload ");
-            Type type = Type.GetType(tempMessage.PayloadType, throwOnError: true);
-            var payload = JsonConvert.DeserializeObject(payloadJson, type);
-
-            return KafkaMessage.Create(tempMessage.Id, payload);
+            if (isNull)
+                throw new InvalidOperationException("Message binary cannot be null or empty.");
+           
+            return MessageSerializer.Deserialize(data);
         }
 
-        public byte[] Serialize(KafkaMessage data, SerializationContext context)
-        {
-            var json = JsonConvert.SerializeObject(data);
-
-            return Encoding.UTF8.GetBytes(json);
-        }
+        public byte[] Serialize(CommonMessage data, SerializationContext context) => MessageSerializer.Serialize(data);
     }
 }

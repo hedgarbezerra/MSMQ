@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using MSMQ.Kafka.Exceptions;
 using MSMQ.Kafka.Factories;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +71,7 @@ namespace MSMQ.Kafka.Services
             }
         }
 
-        private async Task ConsumeHandler(ConsumeResult<Null, KafkaMessage> result, CancellationToken cancellationToken = default)
+        private async Task ConsumeHandler(ConsumeResult<Null, CommonMessage> result, CancellationToken cancellationToken = default)
         {
             if (result is null)
                 throw new InvalidOperationException("Invalid operation due to consume result being null.");

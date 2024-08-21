@@ -1,6 +1,6 @@
 ﻿using MSMQ.Kafka.Exceptions;
 using MSMQ.Kafka.Handlers;
-using MSMQ.Kafka.Messages;
+using MSMQ.Common.Messages;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace MSMQ.Kafka.Factories
 {
     public interface IKafkaConsumerHandlerFactory
     {
-        List<IKafkaConsumerHandler> Create(KafkaMessage message);
+        List<IKafkaConsumerHandler> Create(CommonMessage message);
     }
 
     public class KafkaConsumerHandlerFactory : IKafkaConsumerHandlerFactory
@@ -30,7 +30,7 @@ namespace MSMQ.Kafka.Factories
                 .ToDictionary(k => k.Key, g => g.ToList());
         }
 
-        public List<IKafkaConsumerHandler> Create(KafkaMessage message)
+        public List<IKafkaConsumerHandler> Create(CommonMessage message)
         {
             ArgumentNullException.ThrowIfNull(message);
 

@@ -1,4 +1,4 @@
-﻿using MSMQ.Kafka.Messages;
+﻿using MSMQ.Common.Messages;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace MSMQ.Kafka.Handlers
     public interface IKafkaConsumerHandler
     {
         public string Topic { get; }
-        Task Handle(KafkaMessage message, CancellationToken cancellationToken = default);
+        Task Handle(CommonMessage message, CancellationToken cancellationToken = default);
     }
 
     public abstract class KafkaConsumerHandler<T> : IKafkaConsumerHandler
@@ -29,9 +29,10 @@ namespace MSMQ.Kafka.Handlers
 
         public string Topic => _kafkaTopicGenerator.GetTopic(typeof(T));
 
-        public async Task Handle(KafkaMessage message, CancellationToken cancellationToken = default)
+        public async Task Handle(CommonMessage message, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(message);
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
                 _logger.LogInformation("Started consuming message #{MessageId} from topic '{MessageTopic}' by handler '{ConsumerHandler}'", message.Id, Topic, this.GetType().Name);
@@ -49,6 +50,6 @@ namespace MSMQ.Kafka.Handlers
 
         protected abstract Task Handle(Guid sourceId, T payload, CancellationToken cancellationToken = default);
 
-        protected KafkaMessage<TResult> PackMessage<TResult>(TResult result) => KafkaMessage<TResult>.Create(result);
+        protected CommonMessage<TResult> PackMessage<TResult>(TResult result) => CommonMessage<TResult>.Create(result);
     }
 }
