@@ -1,4 +1,4 @@
-﻿using MSMQ.Kafka.Events;
+﻿using MSMQ.Common.Events;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;

@@ -1,15 +1,14 @@
 ﻿using MSMQ.Common.Actions;
-using MSMQ.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSMQ.Kafka.Actions
+namespace MSMQ.Common.Actions
 {
-    public class UpdateMovieAction : CommonAction
+    public class RemoveMovieAction : CommonAction
     {
-        public Movie Movie { get; init; }
+        public Guid MovieId { get; init; }
     }
 }

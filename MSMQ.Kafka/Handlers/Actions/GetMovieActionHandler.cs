@@ -1,6 +1,6 @@
 ﻿using MSMQ.Common.Entities;
-using MSMQ.Kafka.Actions;
-using MSMQ.Kafka.Events;
+using MSMQ.Common.Actions;
+using MSMQ.Common.Events;
 using MSMQ.Kafka.Services;
 using System;
 using System.Collections.Generic;

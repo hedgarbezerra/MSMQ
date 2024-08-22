@@ -1,6 +1,6 @@
 ﻿using MSMQ.Common.Messages;
 
-namespace MSMQ.Kafka
+namespace MSMQ.Common
 {
     public static class Utilities
     {

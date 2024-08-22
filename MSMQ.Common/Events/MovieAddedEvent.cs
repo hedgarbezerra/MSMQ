@@ -1,6 +1,6 @@
 ﻿using MSMQ.Common.Events;
 
-namespace MSMQ.Kafka.Events
+namespace MSMQ.Common.Events
 {
     public class MovieAddedEvent : CommonEvent
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MSMQ.Kafka.Actions
+namespace MSMQ.Common.Actions
 {
-    public class RemoveMovieAction : CommonAction
+    public class GetMovieAction : CommonAction
     {
         public Guid MovieId { get; init; }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MSMQ.Kafka.Events;
+using MSMQ.Common.Events;
 using MSMQ.Kafka.Factories;
 using MSMQ.Kafka.Handlers;
 using MSMQ.Kafka.Handlers.Actions;

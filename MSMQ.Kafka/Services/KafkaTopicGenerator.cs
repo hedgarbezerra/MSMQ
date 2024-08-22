@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka.Admin;
 using MSMQ.Kafka.Handlers;
 using MSMQ.Common.Messages;
+using MSMQ.Common;
 
 namespace MSMQ.Kafka.Services
 {
