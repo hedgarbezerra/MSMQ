@@ -8,7 +8,5 @@ namespace MSMQ.Common.Actions
 {
     public class CommonAction
     {
-        public Guid Id { get; init; } = Guid.NewGuid();
-        public DateTimeOffset Time { get; init; } = DateTimeOffset.Now;
     }
 }

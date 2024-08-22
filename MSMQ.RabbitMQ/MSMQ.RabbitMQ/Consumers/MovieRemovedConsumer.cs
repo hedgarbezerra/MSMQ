@@ -10,11 +10,8 @@ namespace MSMQ.RabbitMQ.Consumers
 {
     public class MovieRemovedConsumer : RabbitConsumer<RemoveMovieAction>
     {
-        private readonly ILogger<RabbitConsumer<RemoveMovieAction>> _logger;
-
         public MovieRemovedConsumer(ILogger<RabbitConsumer<RemoveMovieAction>> _logger, IRabbitQueuesGenerator _qGenerator) : base(_logger, _qGenerator)
         {
-            _logger = _logger;
         }
 
         protected override async Task Handle(RemoveMovieAction payload)
@@ -25,11 +22,8 @@ namespace MSMQ.RabbitMQ.Consumers
 
     public class MovieRemovedConsumer2 : RabbitConsumer<RemoveMovieAction>
     {
-        private readonly ILogger<RabbitConsumer<RemoveMovieAction>> _logger;
-
         public MovieRemovedConsumer2(ILogger<RabbitConsumer<RemoveMovieAction>> _logger, IRabbitQueuesGenerator _qGenerator) : base(_logger, _qGenerator)
         {
-            _logger = _logger;
         }
 
         protected override async Task Handle(RemoveMovieAction payload)

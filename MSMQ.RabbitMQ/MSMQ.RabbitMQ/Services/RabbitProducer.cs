@@ -20,6 +20,7 @@ namespace MSMQ.RabbitMQ.Services
         private readonly string _exchange = _configuration.GetValue<string>("RabbitMq:Exchange");
         private readonly IModel _channel = _connection.CreateModel();
 
+
         public async Task Publish<TPayload>(TPayload payload, CancellationToken cancellationToken)
         {
             CommonMessage message = CommonMessage.Create(payload);

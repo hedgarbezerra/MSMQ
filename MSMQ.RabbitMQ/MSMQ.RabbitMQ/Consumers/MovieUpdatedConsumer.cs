@@ -10,11 +10,8 @@ namespace MSMQ.RabbitMQ.Consumers
 {
     public class MovieUpdatedConsumer : RabbitConsumer<UpdateMovieAction>
     {
-        private readonly ILogger<RabbitConsumer<UpdateMovieAction>> _logger;
-
         public MovieUpdatedConsumer(ILogger<RabbitConsumer<UpdateMovieAction>> _logger, IRabbitQueuesGenerator _qGenerator) : base(_logger, _qGenerator)
         {
-            _logger = _logger;
         }
 
         protected override async Task Handle(UpdateMovieAction payload)

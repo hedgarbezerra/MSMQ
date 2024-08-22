@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MSMQ.Common;
 using MSMQ.Common.Serializers;
 using MSMQ.RabbitMQ.Factories;
 using MSMQ.RabbitMQ.Services;
@@ -54,6 +55,8 @@ namespace MSMQ.RabbitMQ
                         }
 
                         _channel.BasicAck(@event.DeliveryTag, false);
+
+                        _logger.LogInformation("Finished consuming messaged '#{MessageId}' completely, it'll be removed from queue. It took {MsTime}", message.Id, message.Time.GetAmountTimeTookMS(DateTimeOffset.UtcNow));
                     }
                     catch (Exception)
                     {

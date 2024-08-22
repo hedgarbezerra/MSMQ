@@ -15,8 +15,16 @@ namespace MSMQ.RabbitMQ.Services
         Task Consume(CommonMessage message);
     }
 
-    public abstract class RabbitConsumer<T>(ILogger<RabbitConsumer<T>> _logger, IRabbitQueuesGenerator _qGenerator) : IRabbitConsumer where T : class
+    public abstract class RabbitConsumer<T> : IRabbitConsumer where T : class
     {
+        protected readonly ILogger<RabbitConsumer<T>> _logger;
+        protected readonly IRabbitQueuesGenerator _qGenerator;
+
+        protected RabbitConsumer(ILogger<RabbitConsumer<T>> logger, IRabbitQueuesGenerator qGenerator)
+        {
+            _logger = logger;
+            _qGenerator = qGenerator;
+        }
         public string Queue => _qGenerator.GetQueue(typeof(T));
 
         public async Task Consume(CommonMessage message)
