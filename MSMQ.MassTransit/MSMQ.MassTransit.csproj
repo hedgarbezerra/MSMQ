@@ -4,18 +4,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-MSMQ.RabbitMQ-be9b1d3b-354a-4f72-9495-aa0c8871b547</UserSecretsId>
+    <UserSecretsId>dotnet-MSMQ.MassTransit-9f190db4-3f8a-48b2-a447-daebf8495845</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.2.4" />
+    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.4" />
+    <PackageReference Include="MassTransit.Kafka" Version="8.2.4" />
+    <PackageReference Include="MassTransit.Newtonsoft" Version="8.2.4" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\MSMQ.Common\MSMQ.Common.csproj" />
   </ItemGroup>
 </Project>

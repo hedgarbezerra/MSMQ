@@ -1,4 +1,5 @@
 using MSMQ.Kafka;
+using MSMQ.RabbitMQ;
 
 namespace MSMQ.API
 {
@@ -14,6 +15,7 @@ namespace MSMQ.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddKafkaServices(builder.Configuration);
+            builder.Services.AddRabbitMqServices(builder.Configuration);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

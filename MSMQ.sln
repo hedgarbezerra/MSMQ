@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSMQ.Common", "MSMQ.Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSMQ.RabbitMQ", "MSMQ.RabbitMQ\MSMQ.RabbitMQ\MSMQ.RabbitMQ.csproj", "{DEA55575-2D16-4F5D-8474-8BD5F81A9E5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSMQ.MassTransit", "MSMQ.MassTransit\MSMQ.MassTransit.csproj", "{C5C7C331-EDA9-40ED-9E14-B1AD6D60AD05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DEA55575-2D16-4F5D-8474-8BD5F81A9E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEA55575-2D16-4F5D-8474-8BD5F81A9E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEA55575-2D16-4F5D-8474-8BD5F81A9E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C7C331-EDA9-40ED-9E14-B1AD6D60AD05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C7C331-EDA9-40ED-9E14-B1AD6D60AD05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C7C331-EDA9-40ED-9E14-B1AD6D60AD05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C7C331-EDA9-40ED-9E14-B1AD6D60AD05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

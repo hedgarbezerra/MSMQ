@@ -1,23 +1,19 @@
+using MSMQ.Common.Serializers;
+using MSMQ.RabbitMQ.Factories;
+using MSMQ.RabbitMQ.Services;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+
 namespace MSMQ.RabbitMQ
 {
-    public class Worker : BackgroundService
+    public class Worker(IServiceProvider _serviceProvider) : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
-
-        public Worker(ILogger<Worker> logger)
-        {
-            _logger = logger;
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                }
-                await Task.Delay(1000, stoppingToken);
+                var runningService = scope.ServiceProvider.GetRequiredService<IRabbitMqExecutingService>();
+                await runningService.ExecuteAsync(stoppingToken);
             }
         }
     }
