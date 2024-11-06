@@ -46,28 +46,29 @@ namespace MSMQ.Kafka.Services
             foreach (var topic in topics)
                 _logger.LogInformation("Consumer has subscribed to the following topic: '{TopicName}'", topic.Name);
 
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    _logger.LogInformation("Consumer '{ConsumerName}' is waiting for messages...", consumer.Name);
+                _logger.LogInformation("Consumer '{ConsumerName}' is waiting for messages...", consumer.Name);
 
-                    var consumeResult = consumer.Consume(cancellationToken);
+                var consumeResult = consumer.Consume(cancellationToken);
+                try
+                {
                     await ConsumeHandler(consumeResult, cancellationToken);
+                    consumer.Commit(consumeResult);//Only commits after finishing processing, with success
                 }
-            }
-            catch (OperationCanceledException e)
-            {
-                _logger.LogInformation("Operation was cancelled");
-            }
-            catch (KafkaException e)
-            {
-                _logger.LogError("Error: '{ErrorMessage}' ocurred due to '{ErrorReason}' ", e.Message, e.Error.Reason);
-            }
-            finally
-            {
-                consumer.Close();
-                _logger.LogInformation("Stopping service and dependencies...");
+                catch (OperationCanceledException e)
+                {
+                    _logger.LogInformation("Operation was cancelled");
+                }
+                catch (KafkaException e)
+                {
+                    _logger.LogError("Error: '{ErrorMessage}' ocurred due to '{ErrorReason}' ", e.Message, e.Error.Reason);
+                }
+                finally
+                {
+                    consumer.Close();
+                    _logger.LogInformation("Stopping service and dependencies...");
+                }
             }
         }
 
@@ -86,7 +87,7 @@ namespace MSMQ.Kafka.Services
                     await handler.Handle(message, cancellationToken);
                 }
             }
-            catch(ConsumerNotImplementedException e)
+            catch (ConsumerNotImplementedException e)
             {
                 _logger.LogError("Message #{MessageId} for topic '{MessageTopic}' does not have consumer handler implemented or was not identified.", e.MessageId, e.Topic);
             }

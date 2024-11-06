@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MSMQ.RabbitMQ
 {
@@ -58,9 +59,10 @@ namespace MSMQ.RabbitMQ
 
                         _logger.LogInformation("Finished consuming messaged '#{MessageId}' completely, it'll be removed from queue. It took {MsTime}", message.Id, message.Time.GetAmountTimeTookMS(DateTimeOffset.UtcNow));
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        _channel.BasicNack(@event.DeliveryTag, false, true);
+                        _logger.LogError(e, "Error occurred while consuming message, reason:{ErrorReason}.", e.Message);
+                        _channel.BasicNack(@event.DeliveryTag, false, true);//Caso ocorra um erro, devolve a mensagem para outro consumidor
                     }
                 };
 

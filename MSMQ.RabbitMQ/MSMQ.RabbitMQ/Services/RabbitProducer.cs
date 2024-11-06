@@ -1,4 +1,5 @@
-﻿using MSMQ.Common.Messages;
+﻿using Microsoft.AspNetCore.SignalR;
+using MSMQ.Common.Messages;
 using MSMQ.Common.Serializers;
 using RabbitMQ.Client;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MSMQ.RabbitMQ.Services
 {
@@ -24,22 +26,28 @@ namespace MSMQ.RabbitMQ.Services
         public async Task Publish<TPayload>(TPayload payload, CancellationToken cancellationToken)
         {
             CommonMessage message = CommonMessage.Create(payload);
-            string qName = _qGenerator.GetQueue(message);
-            byte[] serializedMessage = MessageSerializer.Serialize(message);
-            IBasicProperties properties = CreateMessageProperties(message);
 
-            _logger.LogInformation("Started publishing message #{MessageId} to queue '{QueueName}'", message.Id, _exchange);
-             _channel.BasicPublish(exchange: "", routingKey: qName, basicProperties: null, body: serializedMessage);
+            await Publish(message, cancellationToken);
         }
 
         public async Task Publish(CommonMessage message, CancellationToken cancellationToken)
         {
-            string qName = _qGenerator.GetQueue(message);
-            byte[] serializedMessage = MessageSerializer.Serialize(message);
-            IBasicProperties properties = CreateMessageProperties(message);
+            try
+            {
+                string qName = _qGenerator.GetQueue(message);
+                byte[] serializedMessage = MessageSerializer.Serialize(message);
+                IBasicProperties properties = CreateMessageProperties(message);
 
-            _logger.LogInformation("Started publishing message #{MessageId} to queue '{QueueName}'", message.Id, _exchange);
-            _channel.BasicPublish(exchange: "", routingKey: qName, basicProperties: null, body: serializedMessage);
+                _logger.LogInformation("Started publishing message #{MessageId} to queue '{QueueName}'", message.Id, qName);
+                _channel.BasicPublish(exchange: "", routingKey: qName, basicProperties: null, body: serializedMessage);
+
+                if(!_channel.WaitForConfirms(TimeSpan.FromSeconds(15)))//apenas por demonstração
+                    _logger.LogInformation("Unable to confirm whether the message was published or not #{MessageId} to queue '{QueueName}'", message.Id, qName);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error occurred while publishing the message, reason: {ErrorReason}", e.Message);
+            }
         }
 
         private IBasicProperties CreateMessageProperties(CommonMessage message)

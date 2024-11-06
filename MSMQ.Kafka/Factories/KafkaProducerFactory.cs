@@ -24,7 +24,8 @@ namespace MSMQ.Kafka.Factories
             {
                 BootstrapServers = _configuration.GetValue<string>("Kafka:BootstrapServers"),
                 MessageMaxBytes = MAX_ACCEPTED_BYTES,
-                MessageTimeoutMs = 100_000
+                MessageTimeoutMs = 100_000,
+                Acks = Acks.All //Indica se a mensagem deve chegar a todos leitores até ter sua confirmação, não precisa ser All
             };
 
             var builder = new ProducerBuilder<Null, CommonMessage>(config)

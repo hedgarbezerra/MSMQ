@@ -28,6 +28,7 @@ namespace MSMQ.Kafka.Factories
                 GroupId = _configuration.GetValue<string>("Kafka:GroupId"),
                 MessageMaxBytes = MAX_ACCEPTED_BYTES,
                 MaxPartitionFetchBytes = MAX_ACCEPTED_BYTES,
+                EnableAutoCommit = false, //Garantir o consumo antes de commitar(permite que a mensage mseja consumida por outro consumidor
             };
 
             var builder = new ConsumerBuilder<Null, CommonMessage>(config)
