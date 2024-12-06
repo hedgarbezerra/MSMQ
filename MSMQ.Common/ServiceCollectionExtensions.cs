@@ -26,7 +26,7 @@ namespace MSMQ.Common
                 .AddAttributes(new Dictionary<string, object>
                 {
                     ["environment"] = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>().EnvironmentName,
-                    ["service.name"] = "MSMQ"
+                    ["service.name"] = configuration.GetValue<string>("ExecutingApp")
                 });
 
             services.AddOpenTelemetry()
@@ -89,7 +89,7 @@ namespace MSMQ.Common
                         };
                         opt.ResourceAttributes = new Dictionary<string, object>()
                         {
-                            ["service.name"] = "MSMQ"
+                            ["service.name"] = configuration.GetValue<string>("ExecutingApp")
                         };
                     })
                 .CreateLogger();
