@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "msmq.webapi": "StartDebugging",
+        "msmq.kafka": "StartDebugging",
+        "msmq.rabbitmq": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 using MSMQ.Kafka;
 using MSMQ.RabbitMQ;
 using MSMQ.Bus;
+using MSMQ.Common;
 
 namespace MSMQ.API
 {
@@ -13,6 +14,7 @@ namespace MSMQ.API
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddSerilogOptl(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddKafkaServices(builder.Configuration);

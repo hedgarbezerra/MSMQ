@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>64522334-d337-45b0-a9d0-1d1154e239cd</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +18,7 @@
     <ProjectReference Include="..\MSMQ.Bus\MSMQ.Bus.csproj" />
     <ProjectReference Include="..\MSMQ.Common\MSMQ.Common.csproj" />
     <ProjectReference Include="..\MSMQ.Kafka\MSMQ.Kafka.csproj" />
-    <ProjectReference Include="..\MSMQ.RabbitMQ\MSMQ.RabbitMQ\MSMQ.RabbitMQ.csproj" />
+    <ProjectReference Include="..\MSMQ.RabbitMQ\MSMQ.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>

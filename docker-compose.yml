@@ -1,0 +1,90 @@
+services:
+    msmq.webapi:
+        image: ${DOCKER_REGISTRY-}msmqwebapi
+        container_name: webapi
+        build:
+          context: .
+          dockerfile: MSMQ.API/Dockerfile
+        # depends_on:
+        #     - msmq.rabbitmq
+        #     - msmq.kafka 
+
+    # msmq.rabbitmq:
+    #     image: ${DOCKER_REGISTRY-}msmqrabbitmq
+    #     container_name: rabbitmq-worker
+    #     build:
+    #         context: .
+    #         dockerfile: MSMQ.RabbitMQ/Dockerfile
+    #     depends_on:
+    #         - rabbitmq
+    
+    msmq.kafka:
+        image: ${DOCKER_REGISTRY-}msmqkafka
+        container_name: kafka-worker
+        build:
+            context: .
+            dockerfile: MSMQ.Kafka/Dockerfile
+        depends_on:
+            - kafka
+
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        user: "0:0"
+        volumes:
+            - /var/lib/zookeeper/data:/var/lib/zookeeper/data
+            - /var/lib/zookeeper/log:/var/lib/zookeeper/log
+            - /etc/zookeeper/secrets:/etc/zookeeper/secrets
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        volumes:
+          - vol-kafka:/var/lib/kafka/data
+          - vol-kafka:/etc/kafka/secrets
+        ports:
+          - 9092:9092
+        depends_on:
+          - zookeeper
+        environment:
+          KAFKA_BROKER_ID: 1
+          KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+          KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+          KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+          KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+    kafdrop:
+        image: obsidiandynamics/kafdrop:latest
+        depends_on:
+          - kafka
+        ports:
+          - 19000:9000
+        environment:
+          KAFKA_BROKERCONNECT: kafka:29092
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        volumes:
+            - vol-rabbitmq:/var/lib/rabbitmq
+        hostname: "rabbitmq"
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+
+    seq:
+        image: datalust/seq
+        ports:
+            - 5341:5341  # Map host's localhost:5341 to Seq's ingestion-only port
+            - 80:80      # Map host's localhost:80 to Seq UI and API
+        environment:
+            - ACCEPT_EULA=Y
+        volumes:
+            - seq-appdata:/data  # Mount a local path for Seq data storage
+    
+volumes:
+  vol-kafka:
+  seq-appdata:
+  vol-rabbitmq: 

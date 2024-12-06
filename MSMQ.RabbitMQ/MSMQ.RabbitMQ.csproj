@@ -16,6 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MSMQ.Common\MSMQ.Common.csproj" />
+    <ProjectReference Include="..\MSMQ.Common\MSMQ.Common.csproj" />
   </ItemGroup>
 </Project>

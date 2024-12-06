@@ -51,10 +51,15 @@ namespace MSMQ.Kafka.Services
                 _logger.LogInformation("Consumer '{ConsumerName}' is waiting for messages...", consumer.Name);
 
                 var consumeResult = consumer.Consume(cancellationToken);
+                if(consumeResult is null)
+                {
+                    _logger.LogWarning("Received empty or invalid message at {MessageTime}", DateTimeOffset.Now);
+                    continue;
+                }
+
                 try
                 {
-                    await ConsumeHandler(consumeResult, cancellationToken);
-                    consumer.Commit(consumeResult);//Only commits after finishing processing, with success
+                    await ConsumeHandler(consumeResult, _ => consumer.Commit(consumeResult), cancellationToken);
                 }
                 catch (OperationCanceledException e)
                 {
@@ -72,7 +77,7 @@ namespace MSMQ.Kafka.Services
             }
         }
 
-        private async Task ConsumeHandler(ConsumeResult<Null, CommonMessage> result, CancellationToken cancellationToken = default)
+        private async Task ConsumeHandler(ConsumeResult<Null, CommonMessage> result, Action<ConsumeResult<Null, CommonMessage>> commitAction, CancellationToken cancellationToken = default)
         {
             if (result is null)
                 throw new InvalidOperationException("Invalid operation due to consume result being null.");
@@ -90,6 +95,10 @@ namespace MSMQ.Kafka.Services
             catch (ConsumerNotImplementedException e)
             {
                 _logger.LogError("Message #{MessageId} for topic '{MessageTopic}' does not have consumer handler implemented or was not identified.", e.MessageId, e.Topic);
+            }
+            finally
+            {
+                commitAction.Invoke(result);
             }
         }
     }

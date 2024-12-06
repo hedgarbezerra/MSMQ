@@ -3,21 +3,23 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MSMQ.Kafka/MSMQ.Kafka.csproj", "MSMQ.Kafka/"]
-RUN dotnet restore "./MSMQ.Kafka/MSMQ.Kafka.csproj"
+COPY ["MSMQ.API/MSMQ.API.csproj", "MSMQ.API/"]
+RUN dotnet restore "./MSMQ.API/MSMQ.API.csproj"
 COPY . .
-WORKDIR "/src/MSMQ.Kafka"
-RUN dotnet build "./MSMQ.Kafka.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/MSMQ.API"
+RUN dotnet build "./MSMQ.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./MSMQ.Kafka.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./MSMQ.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MSMQ.Kafka.dll"]
+ENTRYPOINT ["dotnet", "MSMQ.API.dll"]
