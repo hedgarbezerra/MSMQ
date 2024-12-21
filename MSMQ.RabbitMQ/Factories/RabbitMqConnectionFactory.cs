@@ -15,14 +15,18 @@ namespace MSMQ.RabbitMQ.Factories
     {
         public IConnection Create()
         {
-            //testar URI
-            var factory = new ConnectionFactory()
+            var factory = _configuration.GetValue<string>("RabbitMq:Url") switch
             {
-                UserName = _configuration.GetValue<string>("RabbitMq:Username"),
-                Password = _configuration.GetValue<string>("RabbitMq:Password"),
-                HostName = _configuration.GetValue<string>("RabbitMq:HostName"),
-                VirtualHost = _configuration.GetValue<string>("RabbitMq:VirtualHost"),
-                DispatchConsumersAsync = true
+                { Length: > 0 } => new ConnectionFactory() { Uri = new Uri(_configuration.GetValue<string>("RabbitMq:Url")), DispatchConsumersAsync = true },
+                "" => new ConnectionFactory()
+                {
+                    UserName = _configuration.GetValue<string>("RabbitMq:Username"),
+                    Password = _configuration.GetValue<string>("RabbitMq:Password"),
+                    HostName = _configuration.GetValue<string>("RabbitMq:HostName"),
+                    VirtualHost = _configuration.GetValue<string>("RabbitMq:VirtualHost"),
+                    DispatchConsumersAsync = true
+                },
+                _ => throw new InvalidOperationException()
             };
 
             return factory.CreateConnection();

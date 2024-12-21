@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using MSMQ.Common.Messages;
 using MSMQ.Common.Serializers;
 using RabbitMQ.Client;
@@ -17,20 +18,34 @@ namespace MSMQ.RabbitMQ.Services
         public Task Publish(CommonMessage message, CancellationToken cancellationToken);
     }
 
-    public class RabbitProducer(ILogger<RabbitProducer> _logger, IConnection _connection, IConfiguration _configuration, IRabbitQueuesGenerator _qGenerator) : IRabbitProducer
+    public class RabbitProducer : IRabbitProducer
     {
-        private readonly string _exchange = _configuration.GetValue<string>("RabbitMq:Exchange");
-        private readonly IModel _channel = _connection.CreateModel();
+        private readonly string _exchange;
+        private readonly IModel _channel;
+        private readonly ILogger<RabbitProducer> _logger;
+        private readonly IConnection _connection;
+        private readonly IRabbitQueuesGenerator _qGenerator;
 
+        public RabbitProducer(ILogger<RabbitProducer> logger, IConnection connection, IRabbitQueuesGenerator qGenerator, IConfiguration configuration)
+        {
+            _logger = logger;
+            _connection = connection;
+            _qGenerator = qGenerator;
+            _exchange = configuration.GetValue<string>("RabbitMq:Exchange");
+            _channel = connection.CreateModel();
+            _channel.ConfirmSelect();
+        }
 
         public async Task Publish<TPayload>(TPayload payload, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(payload);
+
             CommonMessage message = CommonMessage.Create(payload);
 
             await Publish(message, cancellationToken);
         }
 
-        public async Task Publish(CommonMessage message, CancellationToken cancellationToken)
+        public Task Publish(CommonMessage message, CancellationToken cancellationToken)
         {
             try
             {
@@ -48,6 +63,8 @@ namespace MSMQ.RabbitMQ.Services
             {
                 _logger.LogError(e, "Error occurred while publishing the message, reason: {ErrorReason}", e.Message);
             }
+
+            return Task.CompletedTask;
         }
 
         private IBasicProperties CreateMessageProperties(CommonMessage message)

@@ -46,34 +46,33 @@ namespace MSMQ.Kafka.Services
             foreach (var topic in topics)
                 _logger.LogInformation("Consumer has subscribed to the following topic: '{TopicName}'", topic.Name);
 
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                _logger.LogInformation("Consumer '{ConsumerName}' is waiting for messages...", consumer.Name);
-
-                var consumeResult = consumer.Consume(cancellationToken);
-                if(consumeResult is null)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    _logger.LogWarning("Received empty or invalid message at {MessageTime}", DateTimeOffset.Now);
-                    continue;
-                }
+                    _logger.LogInformation("Consumer '{ConsumerName}' is waiting for messages...", consumer.Name);
 
-                try
-                {
+                    var consumeResult = consumer.Consume(cancellationToken);
+                    if (consumeResult is null)
+                    {
+                        _logger.LogWarning("Received empty or invalid message at {MessageTime}", DateTimeOffset.Now);
+                        continue;
+                    }
                     await ConsumeHandler(consumeResult, _ => consumer.Commit(consumeResult), cancellationToken);
                 }
-                catch (OperationCanceledException e)
-                {
-                    _logger.LogInformation("Operation was cancelled");
-                }
-                catch (KafkaException e)
-                {
-                    _logger.LogError("Error: '{ErrorMessage}' ocurred due to '{ErrorReason}' ", e.Message, e.Error.Reason);
-                }
-                finally
-                {
-                    consumer.Close();
-                    _logger.LogInformation("Stopping service and dependencies...");
-                }
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogInformation("Operation was cancelled");
+            }
+            catch (KafkaException e)
+            {
+                _logger.LogError("Error: '{ErrorMessage}' ocurred due to '{ErrorReason}' ", e.Message, e.Error.Reason);
+            }
+            finally
+            {
+                consumer.Close();
+                _logger.LogInformation("Stopping service and dependencies...");
             }
         }
 

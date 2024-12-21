@@ -13,17 +13,15 @@ namespace MSMQ.API.Controllers
     {
         private readonly IRabbitProducer _producer;
 
-        private static Movie Movie = new Common.Entities.Movie() { Name = "Top" };
-
         public RabbitMqController(IRabbitProducer producer)
         {
             _producer = producer;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet, Route("{id:guid}")]
+        public IActionResult Get([FromRoute]Guid id)
         {
-            var action = new GetMovieAction() { MovieId = Movie.Id };
+            var action = new GetMovieAction() { MovieId = id };
             var message = CommonMessage.Create(action);
 
             _producer.Publish(message, CancellationToken.None);
@@ -32,9 +30,9 @@ namespace MSMQ.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody]Movie movie)
         {
-            var action = new AddMovieAction() { Movie = Movie };
+            var action = new AddMovieAction() { Movie = movie };
             var message = CommonMessage.Create(action);
 
             _producer.Publish(message, CancellationToken.None);
@@ -43,9 +41,9 @@ namespace MSMQ.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update()
+        public IActionResult Update([FromBody] Movie movie)
         {
-            var action = new UpdateMovieAction() { Movie = Movie };
+            var action = new UpdateMovieAction() { Movie = movie };
             var message = CommonMessage.Create(action);
 
             _producer.Publish(message, CancellationToken.None);
@@ -53,10 +51,10 @@ namespace MSMQ.API.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        public IActionResult Remove()
+        [HttpDelete, Route("{id:guid}")]
+        public IActionResult Remove([FromRoute] Guid id)
         {
-            var action = new RemoveMovieAction() { MovieId = Movie.Id };
+            var action = new RemoveMovieAction() { MovieId = id };
             var message = CommonMessage.Create(action);
 
             _producer.Publish(message, CancellationToken.None);

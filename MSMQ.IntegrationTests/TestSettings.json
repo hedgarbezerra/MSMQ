@@ -19,7 +19,7 @@
     "BootstrapServers": "kafka:9092"
   },
   "RabbitMq": {
-    "Url": "amqp://rabbitmq:5672",
+    "Url": "amqp://guest:guest@rabbitmq:5672/msmq",
     "Username": "guest",
     "Password": "guest",
     "HostName": "rabbitmq",

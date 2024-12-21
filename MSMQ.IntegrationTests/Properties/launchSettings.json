@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MSMQ.IntegrationTests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "TestSettings_FilePath": "C:\\Users\\hedga\\source\\repos\\MSMQ.Bus\\MSMQ.IntegrationTests\\TestSettings.json"
+      }
+    }
+  }
+}

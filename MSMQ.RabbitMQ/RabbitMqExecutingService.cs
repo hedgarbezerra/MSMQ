@@ -71,10 +71,15 @@ namespace MSMQ.RabbitMQ
 
                 _logger.LogInformation("RabbitMq Services are waiting for messages...");
 
+                await Task.Delay(Timeout.Infinite, stoppingToken);
             }
             catch (OperationCanceledException e)
             {
                 _logger.LogInformation("RabbitMq Services are being shutdown...");
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Something went wrong");
             }
         }
 
