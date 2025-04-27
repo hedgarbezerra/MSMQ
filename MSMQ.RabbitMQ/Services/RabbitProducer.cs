@@ -54,7 +54,7 @@ namespace MSMQ.RabbitMQ.Services
                 IBasicProperties properties = CreateMessageProperties(message);
 
                 _logger.LogInformation("Started publishing message #{MessageId} to queue '{QueueName}'", message.Id, qName);
-                _channel.BasicPublish(exchange: "", routingKey: qName, basicProperties: null, body: serializedMessage);
+                _channel.BasicPublish(exchange: "", routingKey: qName, basicProperties: properties, body: serializedMessage);
 
                 if(!_channel.WaitForConfirms(TimeSpan.FromSeconds(15)))//apenas por demonstração
                     _logger.LogInformation("Unable to confirm whether the message was published or not #{MessageId} to queue '{QueueName}'", message.Id, qName);

@@ -2,7 +2,7 @@ using MSMQ.Kafka;
 using MSMQ.RabbitMQ;
 using MSMQ.Bus;
 using MSMQ.Common;
-
+using MSMQ.Common.Extensions;
 namespace MSMQ.API
 {
     public class Program
@@ -10,11 +10,11 @@ namespace MSMQ.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.AddMultiplayerOpenTelemetry(builder.Configuration);
             // Add services to the container.
 
+            //builder.Services.AddSerilogOptl(builder.Configuration);
             builder.Services.AddControllers();
-            builder.Services.AddSerilogOptl(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddKafkaServices(builder.Configuration);
